@@ -5,8 +5,7 @@ class ccpu:
     def __init__(self) -> None:
         self.regs: dict[str, int] = {
             "rax": 0,
-            "rbx": 0,
-            "rcx": 0,
+            "rbx":0,
             "rsp": 0,
             "rbp": 0,
             "r0": 0,
@@ -183,20 +182,17 @@ def write_val(were:str,val:int) -> None:
 
 
 
-
-        
-            
 comands: list[str] =["mov","add","sub","mul","div","cmp","jmp","jne","jeq","lea","pri"] #pri is definitly asm yeah
 
 
 lables :dict[str,int]= {}
 
 
-with open("benchmark.asm","r") as file:
+with open("input.asm","r") as file:
     text: list[str]=file.readlines()
 
 def parse(liner:str )->list[str]:
-    lin: list[str] = regex.split(r'[,\s]+', line)
+    lin: list[str] = regex.split(r'[ ,\s]+',line)
     nlin: list[str] = []
     i=0
     while i  < len(lin):
@@ -206,9 +202,7 @@ def parse(liner:str )->list[str]:
             sumline+=lin[i+2]
             nlin.append(sumline)
             i+=3
-        elif lin[i].startswith(";"):
-            return nlin
-
+   
         elif lin[i]:
             
             nlin.append(lin[i])
@@ -217,12 +211,13 @@ def parse(liner:str )->list[str]:
         else:
             i+=1
 
+
     return nlin
 
 code=[]
 
 for line in text:
-    laa: list[str]=parse(line)
+    laa=parse(line)
     if laa:
         code.append(laa)
 
@@ -237,69 +232,94 @@ for idx, line in enumerate(code):
 
 # Pass 2: execution loop
 
-start_time: float = time.perf_counter()
-
-i:int=0
-while i < len(code) :
-    ccl:str=code[i][0]  #curent code line
-
-    #print(f"isp: {i}")
-
-    
-    match ccl:
-        case "mov":
-            write_val(code[i][1],get_val(code[i][2]))
-
-        case "lea":
-            write_val(code[i][1],eval_address(code[i][2][1:-1]))
 
 
-        case "inc":
-            cpu.alu.inc(code[i][1])
-
-        case "neg":
-            cpu.alu.neg(code[i][1])
-
-        case "shl":
-            cpu.alu.shl(code[i][1],code[i][2])
-
-        case "shr":
-            cpu.alu.shr(code[i][1],code[i][2])
-
-        case "add":
-            cpu.alu.add(code[i][1],code[i][2])
-
-        case "sub":
-            cpu.alu.sub(code[i][1],code[i][2])
-
-        case "mul":
-            cpu.alu.mul(code[i][1],code[i][2])
-
-        case "div":
-            cpu.alu.div(code[i][1],code[i][2])
 
 
-        case "cmp":
-            cpu.alu.cmp(get_val(code[i][1]),get_val(code[i][2]))
+# === Instruction implementations ===
 
-        case "jmp":
-            cpu.alu.branch.jmp(code[i][1])
+def instr_mov(args) -> None:
+    write_val(args[0], get_val(args[1]))
 
-        case "jne":
-            cpu.alu.branch.jne(code[i][1])
+def instr_lea(args) -> None:
+    write_val(args[0], eval_address(args[1][1:-1]))
 
-        case "je":
-            cpu.alu.branch.je(code[i][1])
+def instr_inc(args) -> None:
+    cpu.alu.inc(args[0])
 
-        case "jmp":
-            cpu.alu.branch.jmp(code[i][1])
+def instr_neg(args) -> None:
+    cpu.alu.neg(args[0])
+
+def instr_shl(args) -> None:
+    cpu.alu.shl(args[0], args[1])
+
+def instr_shr(args) -> None:
+    cpu.alu.shr(args[0], args[1])
+
+def instr_add(args) -> None:
+    cpu.alu.add(args[0], args[1])
+
+def instr_sub(args) -> None:
+    cpu.alu.sub(args[0], args[1])
+
+def instr_mul(args) -> None:
+    cpu.alu.mul(args[0], args[1])
+
+def instr_div(args) -> None:
+    cpu.alu.div(args[0], args[1])
+
+def instr_cmp(args) -> None:
+    cpu.alu.cmp(get_val(args[0]), get_val(args[1]))
+
+def instr_jmp(args) -> None:
+    cpu.alu.branch.jmp(args[0])
+
+def instr_jne(args) -> None:
+    cpu.alu.branch.jne(args[0])
+
+def instr_je(args) -> None:
+    cpu.alu.branch.je(args[0])
+
+def instr_pri(args) -> None:
+    print(get_val(args[0]))
 
 
-        case "pri":
-            print(get_val(code[i][1]))
-    
+# === Dispatcher Table (Strategy Pattern) ===
+dispatch_table = {
+    "mov": instr_mov,
+    "lea": instr_lea,
+    "inc": instr_inc,
+    "neg": instr_neg,
+    "shl": instr_shl,
+    "shr": instr_shr,
+    "add": instr_add,
+    "sub": instr_sub,
+    "mul": instr_mul,
+    "div": instr_div,
+    "cmp": instr_cmp,
+    "jmp": instr_jmp,
+    "jne": instr_jne,
+    "je": instr_je,
+    "pri": instr_pri,
+}
 
-    i+=1
+start_time = time.perf_counter()
 
-end_time: float = time.perf_counter()
-print(f"Execution time: {end_time - start_time:.5f} seconds")
+i = 0
+while i < len(code):
+    instr :str = code[i][0]   # opcode
+    args :list[str] = code[i][1:]   # operands
+
+    #print(f"isp: {i}, instr={instr}, args={args}")
+
+    if instr in dispatch_table:
+        dispatch_table[instr](args)
+    elif instr.endswith(":"):
+        pass
+    else:
+        raise SyntaxError(f"Unknown instruction: {instr}")
+
+    i += 1
+
+end_time = time.perf_counter()
+print(f"Execution time: {end_time - start_time:.4f} seconds")
