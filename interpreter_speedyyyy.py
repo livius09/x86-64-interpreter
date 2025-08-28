@@ -78,10 +78,14 @@ class ccpu:
             write_val(a,result)
 
         def shl(self, a:str, b:str) -> None:
-            write_val(a,get_val(a) << get_val(b))
+            result: int = get_val(a) << get_val(b)
+            self.set_flags(result)
+            write_val(a,result)
 
         def shr(self, a:str, b:str) -> None:
-            write_val(a,get_val(a) >> get_val(b))
+            result: int = get_val(a) >> get_val(b)
+            self.set_flags(result)
+            write_val(a,result)
 
         
         def set_flags(self,a:int) -> None:

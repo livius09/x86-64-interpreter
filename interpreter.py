@@ -25,7 +25,7 @@ class ccpu:
 
     class cmem:
         def __init__(self) -> None:
-            self.MEMORY_SIZE = 16 * 1024  # 64 KB
+            self.MEMORY_SIZE = 1000010  # 1 mb
             self.memory = bytearray(self.MEMORY_SIZE)
 
         def read_mem(self,adr:int,size:int) -> int:
@@ -192,7 +192,7 @@ comands: list[str] =["mov","add","sub","mul","div","cmp","jmp","jne","jeq","lea"
 lables :dict[str,int]= {}
 
 
-with open("benchmark.asm","r") as file:
+with open("input.asm","r") as file:
     text: list[str]=file.readlines()
 
 def parse(liner:str )->list[str]:
