@@ -70,7 +70,15 @@ op_look: dict[str, int]={"mov":0,
                          "je":  13,
                          "jg":  14,
                          "jl":  15,
-                         "pri": 16
+                         "pri": 16,
+                         "not": 17,
+                         "and": 18,
+                         "or" : 19,
+                         "xor": 20,
+                         "sete":21,
+                         "setne":22,
+                         "setl": 23,
+                         "setge":24
                             }
 
 

@@ -38,9 +38,7 @@ class ccpu:
         def __init__(self) -> None:
             self.flags: dict[str, bool] = {
                 "zf": False,  # zero flag
-                "gf": False,  # greater flag
-                "lf": False,  # less flag
-                "cf": False,  # carry flag (placeholder)
+                "sf": False
             }
             self.branch = self.cbranch(self)
 
@@ -79,6 +77,17 @@ class ccpu:
         def shr(self, a:str, b:str) -> None:
             write_val(a,get_val(a) >> get_val(b))
 
+        def andistrc(self,a:str, b:str) -> None:
+            write_val(a,get_val(a) & get_val(b))
+
+        def notistrc(self,a:str) -> None:
+            write_val(a,~get_val(a))
+
+        def oristrc(self,a:str, b:str) -> None:
+            write_val(a,get_val(a) | get_val(b))
+
+        def xoristrc(self,a:str, b:str) -> None:
+            write_val(a,get_val(a) ^ get_val(b))
         
         def set_flags(self,a:int) -> None:
             self.flags["zf"] = (a == 0)
@@ -277,6 +286,19 @@ while i < len(code) :
 
         case "div":
             cpu.alu.div(code[i][1],code[i][2])
+
+        case "not":
+            cpu.alu.notistrc(code[i][1])
+
+        case "and":
+            cpu.alu.andistrc(code[i][1],code[i][2])
+
+        case "or":
+            cpu.alu.andistrc(code[i][1],code[i][2])
+
+        
+
+        
 
 
         case "cmp":

@@ -315,6 +315,68 @@ int main(){
                 //pri
                 printf("%lld " , (int64_t)get_val(in.m1, in.v1));
                 break;
+
+            case 17:
+                //not
+                
+                write_val(in.m1,in.v1, ~get_val(in.m1,in.v1));
+
+                
+                break;
+            case 18:
+                //and
+                
+                write_val(in.m1,in.v1,get_val(in.m1,in.v1) & get_val(in.m2,in.v2));
+
+                
+                break;
+                
+            case 19:
+                //or
+                
+                write_val(in.m1,in.v1,get_val(in.m1,in.v1) | get_val(in.m2,in.v2));
+
+                
+                break;
+            
+            case 20:
+                //xor
+                
+                write_val(in.m1,in.v1,get_val(in.m1,in.v1) ^ get_val(in.m2,in.v2));
+
+                
+                break;
+            case 21:
+                //sete
+                
+                write_val(in.m1,in.v1,zf);
+
+                
+                break;
+            
+            case 22:
+                //setne
+                
+                write_val(in.m1,in.v1,!zf);
+
+                
+                break;
+
+            case 23:
+                //sele
+                
+                write_val(in.m1,in.v1,sf);
+
+                
+                break;
+            case 24:
+                //setge
+                
+                write_val(in.m1,in.v1,!zf);
+
+                
+                break;
+        
             default:
                 return -1;
                 break;
@@ -323,29 +385,33 @@ int main(){
         ip++;
 
         /*
-    "mov": 0,
-    "inc": 1,
-    "dec": 2,
-    "neg": 3,  
-    "shl": 4,  
-    "shr": 5,  
-    "add": 6,  
-    "sub": 7,  
-    "mul": 8,  
-    "div": 9,
-    "cmp": 10,
-    "jmp": 11,
-    "jne": 12,
-    "je":  13,
-    "jg":  14,
-    "jl":  15,
-    "pri": 16,
-    */
+        "mov":0,
+        "inc": 1,
+        "dec": 2,
+        "neg": 3,  
+        "shl": 4,  
+        "shr": 5,  
+        "add": 6,  
+        "sub": 7,  
+        "mul": 8,  
+        "div": 9,
+        "cmp": 10,
+        "jmp": 11,
+        "jne": 12,
+        "je":  13,
+        "jg":  14,
+        "jl":  15,
+        "pri": 16,
+        "not": 17,
+        "and": 18,
+        "or" : 19,
+        "xor": 20,
+        "sete":21,
+        "setne":22,
+        "setl": 23,
+        "setge":24
+        */
         
-
-
-
-
 
     }
     clock_t stop = clock();
